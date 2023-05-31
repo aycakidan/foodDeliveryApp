@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+//import Navbar from "./Navbar";
+import { Container, Row, Col } from "reactstrap";
+import Collapse from "./Menu.js";
+import Login from "./Login.js";
+
+//import logo from "./assets/logo.jpg";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div class="Container mt-sm-3">
+        <Container>
+          <Row>
+            <Col>
+              <Collapse />
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <div className="ml-auto">
+                <Login />
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </div>
     </div>
   );
 }
-
 export default App;
