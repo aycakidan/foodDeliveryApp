@@ -1,5 +1,5 @@
-import { MongoClient } from 'mongodb';
-import express from 'express';
+const { MongoClient } = require('mongodb');
+const express = require('express');
 
   // Connection URL
   const url = 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/?retryWrites=true&w=majority';
@@ -27,15 +27,11 @@ class MongoDatabase{
         // Code to retrieve members from the database
         // and send the response back
         const members = await Database.collection('Members').find().toArray();
-        
-        members.forEach(member => {
-            res.send(member.name + ' ' + member.surname + '<br>');
-        });
-        
+        res.json(members);
     });
 
     // Start the server
-    const port = 3000;
+    const port = 4000;
     app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     });
@@ -126,4 +122,4 @@ class MongoDatabase{
 }
     
 var db = new MongoDatabase();
-export var app = db.StartClient();
+var app = db.StartClient();
