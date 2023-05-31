@@ -20,15 +20,17 @@ class MongoDatabase{
 
     const app = new express();
 
-    // Define your routes here
-
-    // Example route
+    // Members route
     app.get('/members', async (req, res) => {
-        // Code to retrieve members from the database
-        // and send the response back
         const members = await Database.collection('Members').find().toArray();
         res.json(members);
     });
+
+    // Foods route
+    app.get('/foods', async (req, res) => {
+      const foods = await Database.collection('Foods').find().toArray();
+      res.json(foods);
+  });
 
     // Start the server
     const port = 4000;
