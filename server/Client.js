@@ -1,5 +1,7 @@
 const { MongoClient } = require('mongodb');
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
   // Connection URL
   const url = 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/?retryWrites=true&w=majority';
@@ -7,19 +9,18 @@ const express = require('express');
 
   // Database Name
 const dbName = 'FoodDeliveryDB';
+const app = new express();
+
+app.use(cors());
+app.use(bodyParser.json());
+
+const port = 4000;
 
 var Database;
  
 class MongoDatabase{
 
-  async StartClient() {
-    // Use connect method to connect to the server  
-    await client.connect()
-    console.log('Connected successfully to server');
-    Database = client.db(dbName);
-
-    const app = new express();
-
+  async GetCollections() {
     // Members route
     app.get('/members', async (req, res) => {
         const members = await Database.collection('Members').find().toArray();
@@ -30,98 +31,72 @@ class MongoDatabase{
     app.get('/foods', async (req, res) => {
       const foods = await Database.collection('Foods').find().toArray();
       res.json(foods);
-  });
-
-    // Start the server
-    const port = 4000;
-    app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
     });
-  
-    return app;
   }
   
   // Register member
-  async AddMember(name, surname, email, phoneNumber, adress){
-    var member = {name: name, surname: surname, email: email, phoneNumber: phoneNumber, adress: adress}
-    var collection = await Database.collection("Members");
-    await collection.insertOne(member);
-    return await this.GetMember(member);
+  async AddMember(){
+    app.post('/members', async (req, res) => {
+      try {
+        const memberData = req.body;
+
+        await client.connect()
+        console.log('Connected successfully to server');
+
+        const members = await Database.collection('Members');
+        await members.insertOne(memberData);
+
+        res.status(201).json({ message: 'Item inserted successfully' });
+      } catch (error) {
+        console.error('Error inserting item:', error);
+        res.status(500).json({ error: 'Failed to insert item' });
+      }
+    })
   }
 
-  // Unregister member
-  async DeleteMember(member){
-    var collection = await Database.collection("Members");
-    await collection.deleteOne(member)
-  }
+  async CheckIfMember(){
+    app.post('/members/login', async (req, res) => {
+      // Retrieve the user data from the request, e.g., req.query.username or req.query.email
+      const { password, email } = req.body;
 
-  // Check if member exist in database
-  async CheckMember(member){
-    var collection = await Database.collection("Members");
-    var count = await collection.count(member, {limit: 1});
-    if(count > 0) return true;
-    else return false;
-  }
+      try {
+        const members = await Database.collection('Members');
+        // Perform the database query to check if the user is a member
+        const member = await members.findOne({ email: email, password: password });
 
-  async GetMember(member){
-    var collection = await Database.collection("Members");
-          
-    if(await this.CheckMember(member)){
-      var m = await collection.find(member).toArray();
-      return m[0]; 
-    }
-    else return 'The member does not exists in the database.'
-  }
-
-  // email: 
-  // password: 
-  // firstName: 
-  // lastName: 
-  // phoneNumber: 
-
-  async CheckFood(food){
-    var collection = await Database.collection("Foods");
-    var count = await collection.count({item: food}, {limit: 1});
-    if(count > 0) return true;
-    else return false;
-  }
-
-  async GetFood(food){
-    var collection = await Database.collection("Foods");
-    if(await this.CheckFood(food)){
-      var f = await collection.find({item: food}).toArray();
-      return f[0]; 
-    }
-    else return 'This food does not exists in the database.'
-  }
-
-  async CreateCollection(){
-    var inserted_elements = await collection.insertMany([  //insert operation for adding content in the menu
-
-      { item : 'Soup',price : 40,},
-
-      {item : 'Pasta',price : 100,},
-
-      {item : 'Fish',price : 300,},
-
-      {item : 'Chicken',price : 150,},
-      
-      {item : 'Dessert',price : 80,},
-
-      {item : 'Fruits',price : 60,},
-        
-      { item : 'Drinks', price : 20,}
-
-    ]);
-
-  }
-  
-
-  async GetCollection(name){
-    const collection = await Database.collection(name)
-    return await collection.find({}).toArray();
+        if (member) {
+          // Member exists, send a success response
+          res.json({ success: true, message: 'Member login successful' });
+        } else {
+          // Member does not exist or invalid credentials, send an error response
+          res.json({ success: false, message: 'Invalid email or password' });
+        }
+      } 
+      catch (error) {
+      console.error('Error occurred while checking member:', error);
+      // Handle the error and send an error response
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+      }
+    })
   }
 }
     
-var db = new MongoDatabase();
-var app = db.StartClient();
+async function InitializeExpress(){
+  var db = new MongoDatabase();
+  
+  await client.connect()
+    console.log('Connected successfully to server');
+    Database = client.db(dbName);
+
+  await db.GetCollections();
+  await db.AddMember();
+  await db.CheckIfMember();
+
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+    });
+    
+  //client.close();
+}
+
+InitializeExpress();
