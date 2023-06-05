@@ -1,44 +1,30 @@
-import React, { useState, useEffect } from "react";
-//import Navbar from "./Navbar";
+import React, { useState } from "react";
 import { Container, Row, Col } from "reactstrap";
-import Collapse from "./Menu.js";
-import Login from "./Login.js";
-import axios from 'axios';
-
-//import logo from "./assets/logo.jpg";
+import LoginPage from "./components/LoginPage.js";
+import HomePage from "./components/HomePage.js";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const [items, setItems] = useState([]);
-  // Database hook example
-  useEffect(() => {
-    // Fetch data from your API endpoint
-    axios.get("http://localhost:4000/member")
-        .then(response => {
-          setItems(response.data);
-        })
-        .catch(error => {
-          console.error("Error fetching items:", error);
-        });
-    }, []);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
 
   return (
     <div>
-      <div class="Container mt-sm-3">
-        <Container>
+      {isLoggedIn ? (
+        <HomePage />
+      ) : (
+        <Container className="mt-sm-3">
           <Row>
-            <Col>
-              <Collapse />
-            </Col>
-            <Col className="d-flex justify-content-end">
-              <div className="ml-auto">
-                <Login />
-              </div>
+            <Col xs={12} className="d-flex justify-content-center">
+              <LoginPage onLogin={handleLogin} />
             </Col>
           </Row>
         </Container>
-      </div>
+      )}
     </div>
   );
 }
+
 export default App;
