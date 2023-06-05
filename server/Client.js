@@ -22,25 +22,25 @@ var Database;
 class MongoDatabase{
 
   async GetCollections() {
-    try{app.get('/members', async (req, res) => {
-      const members = await Database.collection('Members').find().toArray();
-      res.json(members);
-      });
-    }
-    catch(error){
-      console.error('Could not find members collection:', error)
-      res.status(500).json({ error: 'Could not find members collection' });
-    }
-    
-    try {
-      app.get('/foods', async (req, res) => {
+    app.get('/members', async (req, res) => {
+      try {
+        const members = await Database.collection('Members').find().toArray();
+        res.json(members);
+      } catch (error) {
+        console.error('Could not find members collection:', error)
+        res.status(500).json({ error: 'Could not find members collection' });
+      }
+    });
+
+    app.get('/foods', async (req, res) => {
+      try {
         const foods = await Database.collection('Foods').find().toArray();
         res.json(foods);
-      });
-    } catch (error) {
-      console.error('Could not find foods collection:', error)
-      res.status(500).json({ error: 'Could not find foods collection' });
-    }
+      } catch (error) {
+        console.error('Could not find foods collection:', error)
+        res.status(500).json({ error: 'Could not find foods collection' });
+      }
+    });
   }
   
   // Register member
