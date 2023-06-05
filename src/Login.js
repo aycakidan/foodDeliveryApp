@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Modal, ModalHeader, ModalBody, Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import axios from 'axios';
 
 export default class MyDropdown extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class MyDropdown extends Component {
       password: '',
       firstName: '',
       lastName: '',
-      phoneNumber: ''
+      phoneNumber: 0
     };
   }
 
@@ -33,46 +34,82 @@ export default class MyDropdown extends Component {
       isRegisterModalOpen: !prevState.isRegisterModalOpen
     }));
   }
-
+  
   handleInputChange = (e) => {
     const { name, value } = e.target;
+    
     this.setState({
       [name]: value
     });
   }
 
-  handleLoginFormSubmit = (e) => {
-    e.preventDefault();
-    const { email, password } = this.state;
-    // Giriş işlemlerini yapmak için burada gerekli işlemleri gerçekleştirebilirsiniz
-    console.log('Email:', email);
-    console.log('Password:', password);
-    // Formu sıfırlama
-    this.setState({
-      email: '',
-      password: ''
-    });
+  handlePhoneNumber = (e) => {
+    const value = e.target.value;
+
+    const [setPhoneNumber] = this.state;
+    const intValue = parseInt(value, 10); // Parse the value as an integer
+    setPhoneNumber(isNaN(intValue) ? '' : intValue);
   }
 
-  handleRegisterFormSubmit = (e) => {
+  handleLoginFormSubmit = async (e) => {
+    e.preventDefault();
+    const { email, password } = this.state; // Use `this.state` instead of `useState`
+    
+    try {
+      const response = await axios.post(`http://localhost:4000/members/login`, {
+        email: email,
+        password: password
+      });
+
+      if (response.data.success) {
+        console.log('Login successful')
+        // Member exists, do something
+      } else {
+        console.log('Invalid email or password')
+        // Member does not exist, do something else
+      }
+  
+      this.setState({
+        email: '',
+        password: ''
+      });
+  
+    } catch (error) {
+      console.error('Error occurred while checking member:', error);
+      // Handle the error
+    }
+  }
+  
+  handleRegisterFormSubmit = async (e) => {
     e.preventDefault();
     const { firstName, lastName, phoneNumber, email, password } = this.state;
-    // Üye kaydı işlemlerini yapmak için burada gerekli işlemleri gerçekleştirebilirsiniz
-    console.log('First Name:', firstName);
-    console.log('Last Name:', lastName);
-    console.log('Phone Number:', phoneNumber);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    // Formu sıfırlama
-    this.setState({
-      firstName: '',
-      lastName: '',
-      phoneNumber: '',
-      email: '',
-      password: ''
-    });
-  }
-
+    
+    try {
+      const response = await axios.post('http://localhost:4000/members', {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        password: password,
+        email: email,
+      });
+  
+      // Handle the response from the server
+      console.log(response.data);
+  
+      // Form reset
+      this.setState({
+        firstName: '',
+        lastName: '',
+        phoneNumber: 0,
+        email: '',
+        password: ''
+      });
+    } catch (error) {
+      // Handle any errors that occurred during the request
+      console.error(error);
+    }
+  };
+  
   render() {
     const { email, password, firstName, lastName, phoneNumber } = this.state;
     return (
@@ -140,7 +177,7 @@ export default class MyDropdown extends Component {
                   onChange={this.handleInputChange}
                 />
               </FormGroup>
-              <Button color="primary" type="submit">Üye Ol</Button>
+              <Button onClick={this.handleRegisterFormSubmit} color="primary" type="submit">Üye Ol</Button>
             </Form>
           </ModalBody>
         </Modal>
@@ -168,7 +205,7 @@ export default class MyDropdown extends Component {
                   onChange={this.handleInputChange}
                 />
               </FormGroup>
-              <Button color="primary" type="submit">Giriş Yap</Button>
+              <Button onClick={this.handleLoginFormSubmit} color="primary" type="submit">Giriş Yap</Button>
             </Form>
           </ModalBody>
         </Modal>

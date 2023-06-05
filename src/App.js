@@ -11,6 +11,12 @@ function App() {
   };
 
   return (
+
+
+//import logo from "./assets/logo.jpg";
+
+
+  
     <div>
       {isLoggedIn ? (
         <HomePage />
