@@ -13,17 +13,24 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
 
     try {
       // Kullanıcı girişi için API çağrısı
-      const response = await axios.post("http://localhost:4000/login", {
-        username,
-        password,
+      const response = await axios.post("http://localhost:4000/members/login", {
+        username: username,
+        password: password,
       });
 
-      if (response.data === "admin") {
-        // Eğer kullanıcı admin ise admin sayfasını aç
-        handleLogin("admin");
-      } else {
-        // Diğer durumlarda ana sayfayı aç
-        handleLogin("user");
+      if(response.data.success){
+        console.log('Login successful')
+
+        if (username === "admin") {
+          // Eğer kullanıcı admin ise admin sayfasını aç
+          handleLogin("admin");
+        } else {
+          // Diğer durumlarda ana sayfayı aç
+          handleLogin("user");
+        }
+      }
+      else{
+        console.log('Wrong username or password')
       }
     } catch (error) {
       console.error("Giriş hatası:", error);
@@ -65,23 +72,50 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
+  const isValidEmail = (email) => {
+    // Regular expression to validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if(username === 'admin'){
+      console.warn('Can not register as admin')
+      return;
+    }
+
+    if (!isValidEmail(email)){
+      console.warn('Email is not valid');
+      return;
+    }
+
+    // Supposed to check for existing usernames and emails but not working
+    const uResponse = await axios.get('http://localhost:4000/members' + '?username=' + username)
+    const eResponse = await axios.get('http://localhost:4000/members' + '?email=' + email)
+
+    if(uResponse.data.exists){
+      console.warn('Username is taken')
+      return;
+    }
+
+    if(eResponse.data.exists){  
+      console.warn('Email is exists')
+      return;
+    }
+
     try {
       // Kullanıcı kaydı için API çağrısı
-      const response = await axios.post("http://localhost:4000/register", {
-        username,
-        password,
-        email,
+      await axios.post('http://localhost:4000/members', {
+        username: username,
+        password: password,
+        email: email,
       });
 
-      if (response.data === "success") {
-        // Kayıt başarılıysa giriş yap ve ana sayfayı aç
-        handleLogin("user");
-      } else {
-        console.error("Kayıt hatası:", response.data);
-      }
+      handleLogin("user");
+      console.log('Registered user')
+
     } catch (error) {
       console.error("Kayıt hatası:", error);
     }

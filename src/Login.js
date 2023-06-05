@@ -53,61 +53,16 @@ export default class MyDropdown extends Component {
 
   handleLoginFormSubmit = async (e) => {
     e.preventDefault();
-    const { email, password } = this.state; // Use `this.state` instead of `useState`
-    
-    try {
-      const response = await axios.post(`http://localhost:4000/members/login`, {
-        email: email,
-        password: password
-      });
-
-      if (response.data.success) {
-        console.log('Login successful')
-        // Member exists, do something
-      } else {
-        console.log('Invalid email or password')
-        // Member does not exist, do something else
-      }
-  
-      this.setState({
-        email: '',
-        password: ''
-      });
-  
-    } catch (error) {
-      console.error('Error occurred while checking member:', error);
-      // Handle the error
-    }
   }
   
   handleRegisterFormSubmit = async (e) => {
     e.preventDefault();
-    const { firstName, lastName, phoneNumber, email, password } = this.state;
-    
-    try {
-      const response = await axios.post('http://localhost:4000/members', {
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: phoneNumber,
-        password: password,
-        email: email,
-      });
-  
-      // Handle the response from the server
-      console.log(response.data);
-  
-      // Form reset
-      this.setState({
-        firstName: '',
-        lastName: '',
-        phoneNumber: 0,
-        email: '',
-        password: ''
-      });
-    } catch (error) {
-      // Handle any errors that occurred during the request
-      console.error(error);
-    }
+
+    this.setState({
+      username: '',
+      email: '',
+      password: ''
+    });
   };
   
   render() {

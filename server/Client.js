@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 
   // Database Name
 const dbName = 'FoodDeliveryDB';
+
 const app = new express();
 
 app.use(cors());
@@ -21,17 +22,25 @@ var Database;
 class MongoDatabase{
 
   async GetCollections() {
-    // Members route
-    app.get('/members', async (req, res) => {
-        const members = await Database.collection('Members').find().toArray();
-        res.json(members);
-    });
-
-    // Foods route
-    app.get('/foods', async (req, res) => {
-      const foods = await Database.collection('Foods').find().toArray();
-      res.json(foods);
-    });
+    try{app.get('/members', async (req, res) => {
+      const members = await Database.collection('Members').find().toArray();
+      res.json(members);
+      });
+    }
+    catch(error){
+      console.error('Could not find members collection:', error)
+      res.status(500).json({ error: 'Could not find members collection' });
+    }
+    
+    try {
+      app.get('/foods', async (req, res) => {
+        const foods = await Database.collection('Foods').find().toArray();
+        res.json(foods);
+      });
+    } catch (error) {
+      console.error('Could not find foods collection:', error)
+      res.status(500).json({ error: 'Could not find foods collection' });
+    }
   }
   
   // Register member
@@ -39,9 +48,6 @@ class MongoDatabase{
     app.post('/members', async (req, res) => {
       try {
         const memberData = req.body;
-
-        await client.connect()
-        console.log('Connected successfully to server');
 
         const members = await Database.collection('Members');
         await members.insertOne(memberData);
@@ -57,12 +63,12 @@ class MongoDatabase{
   async CheckIfMember(){
     app.post('/members/login', async (req, res) => {
       // Retrieve the user data from the request, e.g., req.query.username or req.query.email
-      const { password, email } = req.body;
+      const { username, password } = req.body;
 
       try {
         const members = await Database.collection('Members');
         // Perform the database query to check if the user is a member
-        const member = await members.findOne({ email: email, password: password });
+        const member = await members.findOne({ username: username, password: password });
 
         if (member) {
           // Member exists, send a success response

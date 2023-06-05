@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
+import axios from "axios";
 
 export default class MyCollapse extends Component {
   constructor(props) {
@@ -7,6 +8,17 @@ export default class MyCollapse extends Component {
     this.state = {
       isOpen: false,
     };
+  }
+
+  GetFoods(){
+    axios.get('http://localhost:4000/foods')
+      .then(response => {
+        // Update the state with the received items
+        this.setState({ items: response.data });
+      })
+      .catch(error => {
+        console.error('Error occurred while fetching items:', error);
+      });
   }
 
   toggleCollapse = () => {

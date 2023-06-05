@@ -22,7 +22,7 @@ const Register = () => {
       password: password
     };
 
-    axios.post("http://localhost:4000/member/register", newUser)
+    axios.post("http://localhost:4000/member/login", newUser)
       .then(response => {
         console.log(response.data);
         setUsername("");
