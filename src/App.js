@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Container, Row, Col } from "reactstrap";
 import LoginPage from "./components/LoginPage.js";
 import HomePage from "./components/HomePage.js";
+import "./components/styles/LoginPage.css";
+
+
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

@@ -92,7 +92,9 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
     }
 
     // Supposed to check for existing usernames and emails but not working
+    // eslint-disable-next-line no-useless-concat
     const uResponse = await axios.get('http://localhost:4000/members' + '?username=' + username)
+    // eslint-disable-next-line no-useless-concat
     const eResponse = await axios.get('http://localhost:4000/members' + '?email=' + email)
 
     if(uResponse.data.exists){
