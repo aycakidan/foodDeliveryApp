@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import mainNavbar from "./Navbar";
+import Navbar from "./Navbar";
 
 function HomePage() {
   return (
@@ -8,11 +8,10 @@ function HomePage() {
       <Container className="mt-sm-3">
         <Row>
           <Col xs={12} className="d-flex justify-content-center">
-            <mainNavbar />
+            <Navbar />
           </Col>
         </Row>
       </Container>
-      {<p>homega"</p>}
     </div>
   );
 }

@@ -7,30 +7,27 @@ import "./styles/LoginPage.css";
 function LoginForm({ handleLogin, showRegistrationForm }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(""); // Hata durumunda mesajı saklamak için state ekledik
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Kullanıcı girişi için API çağrısı
       const response = await axios.post("http://localhost:4000/members/login", {
         username: username,
         password: password,
       });
 
-      if(response.data.success){
-        console.log('Login successful')
+      if (response.data.success) {
+        console.log("Login successful");
 
         if (username === "admin") {
-          // Eğer kullanıcı admin ise admin sayfasını aç
           handleLogin("admin");
         } else {
-          // Diğer durumlarda ana sayfayı aç
           handleLogin("user");
         }
-      }
-      else{
-        console.log('Wrong username or password')
+      } else {
+        setError("Invalid username or password"); // Hatalı kullanıcı adı veya şifre durumunda hata mesajını güncelledik
       }
     } catch (error) {
       console.error("Giriş hatası:", error);
@@ -40,6 +37,7 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
   return (
     <form onSubmit={handleSubmit}>
       <h2>LOGIN</h2>
+      {error && <p className="error">{error}</p>} {/* Hata mesajını ekranda göstermek için */}
       <div>
         <label>User Name:</label>
         <input
@@ -71,9 +69,9 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
   const isValidEmail = (email) => {
-    // Regular expression to validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
@@ -81,43 +79,42 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(username === 'admin'){
-      console.warn('Can not register as admin')
+    if (username === "admin") {
+      setError("Can not register as admin");
       return;
     }
 
-    if (!isValidEmail(email)){
-      console.warn('Email is not valid');
-      return;
-    }
-
-    // Supposed to check for existing usernames and emails but not working
-    // eslint-disable-next-line no-useless-concat
-    const uResponse = await axios.get('http://localhost:4000/members' + '?username=' + username)
-    // eslint-disable-next-line no-useless-concat
-    const eResponse = await axios.get('http://localhost:4000/members' + '?email=' + email)
-
-    if(uResponse.data.exists){
-      console.warn('Username is taken')
-      return;
-    }
-
-    if(eResponse.data.exists){  
-      console.warn('Email is exists')
+    if (!isValidEmail(email)) {
+      setError("Email is not valid");
       return;
     }
 
     try {
-      // Kullanıcı kaydı için API çağrısı
-      await axios.post('http://localhost:4000/members', {
+      const uResponse = await axios.get(
+        `http://localhost:4000/members?username=${username}`
+      );
+      const eResponse = await axios.get(
+        `http://localhost:4000/members?email=${email}`
+      );
+
+      if (uResponse.data.length > 0) {
+        setError("Username is taken");
+        return;
+      }
+
+      if (eResponse.data.length > 0) {
+        setError("Email is already registered");
+        return;
+      }
+
+      await axios.post("http://localhost:4000/members", {
         username: username,
         password: password,
         email: email,
       });
 
       handleLogin("user");
-      console.log('Registered user')
-
+      console.log("Registered user");
     } catch (error) {
       console.error("Kayıt hatası:", error);
     }
@@ -126,6 +123,7 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
   return (
     <form onSubmit={handleSubmit}>
       <h2>SIGN UP</h2>
+      {error && <p className="error">{error}</p>}
       <div>
         <label>User Name:</label>
         <input
@@ -162,6 +160,7 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
   );
 }
 
+
 function LoginPage() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userType, setUserType] = useState("");
@@ -181,23 +180,19 @@ function LoginPage() {
   };
 
   if (loggedIn) {
-    // Eğer kullanıcı giriş yapmışsa ve admin ise admin sayfasını aç
     if (userType === "admin") {
       return <AdminPage />;
     }
 
-    // Diğer durumlarda ana sayfayı aç
     return <HomePage />;
   }
 
   return (
     <div>
       <div className="left-section">
-        {/* Sol tarafta kullanıcı resmi */}
         <img src="/path/to/user-image.jpg" alt="User" />
       </div>
       <div className="right-section">
-        {/* Giriş formu veya kayıt formu */}
         {loginFormVisible ? (
           <LoginForm
             handleLogin={handleLogin}

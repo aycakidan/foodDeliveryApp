@@ -1,16 +1,8 @@
 import React from 'react';
-import { 
-  Navbar as ReactstrapNavbar,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from 'reactstrap';
+import { Navbar as ReactstrapNavbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Link } from 'react-scroll';
 
-function mainNavbar() {
+function Navbar() {
   return (
     <ReactstrapNavbar className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
@@ -20,22 +12,21 @@ function mainNavbar() {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <Nav className="navbar-nav">
             <NavItem>
-              <NavLink className="nav-link active" aria-current="page" href="#">Home</NavLink>
+              <Link to="home" smooth={true} className="nav-link active" href="#">Home</Link>
             </NavItem>
             <NavItem>
-              <NavLink className="nav-link" href="#">Features</NavLink>
+              <Link to="products" smooth={true} className="nav-link">Products</Link>
             </NavItem>
             <NavItem>
-              <NavLink className="nav-link" href="#">Pricing</NavLink>
+              <Link to="about" smooth={true} className="nav-link">About Us</Link>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
-                Dropdown link
+                Profile
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem>Action</DropdownItem>
-                <DropdownItem>Another action</DropdownItem>
-                <DropdownItem>Something else here</DropdownItem>
+                <DropdownItem>My Cart</DropdownItem>
+                <DropdownItem>Settings</DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
@@ -45,4 +36,4 @@ function mainNavbar() {
   );
 }
 
-export default mainNavbar;
+export default Navbar;
