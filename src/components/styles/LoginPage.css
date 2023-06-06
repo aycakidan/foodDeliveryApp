@@ -1,4 +1,10 @@
 /* LoginPage.css */
+body {
+  background-image: url("images.jpg");
+  background-size: cover;
+
+  
+}
 form{
     margin-top: 20px;
     
@@ -36,3 +42,5 @@ h2 {
   button[type="submit"]:hover {
     background-color: #0056b3;
   }
+
+ 

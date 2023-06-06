@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import axios from 'axios';
 
+
 const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
