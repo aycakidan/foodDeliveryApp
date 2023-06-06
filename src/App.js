@@ -28,7 +28,7 @@ function App() {
                 element={isLoggedIn ? <HomePage /> : <Navigate to="/HomePage" />}
               />
               <Route
-                path="/settings"
+                path="/settings" Component={Settings}
                 element={isLoggedIn ? <Settings /> : <Navigate to="/settings" />}
               />
             </Routes>
