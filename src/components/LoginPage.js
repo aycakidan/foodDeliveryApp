@@ -97,12 +97,12 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
         `http://localhost:4000/members?email=${email}`
       );
 
-      if (uResponse.data.length > 0) {
+      if (uResponse.data.length < 0) {
         setError("Username is taken");
         return;
       }
 
-      if (eResponse.data.length > 0) {
+      if (eResponse.data.length < 0) {
         setError("Email is already registered");
         return;
       }
