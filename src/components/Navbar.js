@@ -2,8 +2,23 @@ import React from 'react';
 import { Navbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { BsFillBasketFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { Link, animateScroll as scroll } from 'react-scroll';
 
 const CustomNavbar = () => {
+
+  const handleScrollToTop = () => {
+    scroll.scrollToTop({
+      duration: 0,
+      smooth: true
+    });
+  }
+
+  const handleScrollToAbout = () => {
+    scroll.scrollTo('about', {
+      duration: 250,
+      smooth: true
+    })
+  }
 
   const navigate = useNavigate();
 
@@ -29,10 +44,14 @@ const CustomNavbar = () => {
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
         <Nav className="navbar-nav mr-auto">
           <NavItem>
-            <button className="btn btn-link nav-link">Home</button>
+            <Link>
+              <button onClick={handleScrollToTop} className="btn btn-link nav-link">Home</button>
+            </Link>
           </NavItem>
           <NavItem>
-            <button className="btn btn-link nav-link">About Us</button>
+            <Link>
+              <button onClick={handleScrollToAbout} to="about" className="btn btn-link nav-link">About Us</button>
+            </Link>
           </NavItem>
         </Nav>
         <Nav className="ml-auto">
