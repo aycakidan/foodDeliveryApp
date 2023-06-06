@@ -1,19 +1,29 @@
 /* LoginPage.css */
+body {
+  background-image: url("images.jpg");
+  background-size: cover;
+
+}
 form{
     margin-top: 20px;
+    font-size: 20px;
+    font-weight:bold;
+    background-color: #fff;
     
 }
 
 h2 {
-    font-size: 24px;
+    font-size: 50px;
     margin-bottom: 10px;
     text-align: center;
+    font-weight:bold;
    
   }
   
   label {
     display: block;
     margin-bottom: 5px;
+    font-weight:bold; 
 
   }
   
@@ -22,7 +32,8 @@ h2 {
   input[type="email"] {
     width: 100%;
     padding: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
+    font-weight:bold; 
   }
   
   button[type="submit"] {
@@ -35,4 +46,7 @@ h2 {
   
   button[type="submit"]:hover {
     background-color: #0056b3;
+    
   }
+
+ 

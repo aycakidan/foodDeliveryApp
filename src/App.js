@@ -1,38 +1,41 @@
-import React, { useState } from "react";
-import { Container, Row, Col } from "reactstrap";
-import LoginPage from "./components/LoginPage.js";
-import HomePage from "./components/HomePage.js";
-import "./components/styles/LoginPage.css";
-
-
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Container, Row, Col } from 'reactstrap';
+import LoginPage from './components/LoginPage.js';
+import HomePage from './components/HomePage.js';
+import Settings from './components/Settings.js';
+import './components/styles/LoginPage.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
   };
 
   return (
-
-
-//import logo from "./assets/logo.jpg";
-
-
-  
-    <div>
-      {isLoggedIn ? (
-        <HomePage />
-      ) : (
-        <Container className="mt-sm-3">
-          <Row>
-            <Col xs={12} className="d-flex justify-content-center">
-              <LoginPage onLogin={handleLogin} />
-            </Col>
-          </Row>
-        </Container>
-      )}
-    </div>
+    <Router>
+      <Container className="mt-sm-3">
+        <Row>
+          <Col xs={12} className="d-flex justify-content-center">
+            <Routes>
+              <Route
+                path="/"
+                element={isLoggedIn ? <Navigate to="/HomePage" /> : <LoginPage onLogin={handleLogin} />}
+              />
+              <Route
+                path="/HomePage"
+                element={isLoggedIn ? <HomePage /> : <Navigate to="/HomePage" />}
+              />
+              <Route
+                path="/settings"
+                element={isLoggedIn ? <Settings /> : <Navigate to="/settings" />}
+              />
+            </Routes>
+          </Col>
+        </Row>
+      </Container>
+    </Router>
   );
 }
 

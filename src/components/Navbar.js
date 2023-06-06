@@ -1,61 +1,62 @@
 import React from 'react';
-import { Navbar as ReactstrapNavbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Link, animateScroll as scroll } from 'react-scroll';
+import { Navbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { BsFillBasketFill } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
-function Navbar() {
+const CustomNavbar = () => {
 
-  const handleScrollToTop = () => {
-    scroll.scrollToTop({
-      duration: 0,
-      smooth: true
-    });
-  }
+  const navigate = useNavigate();
 
-  const handleScrollToProducts = () => {
-    scroll.scrollTo('products', {
-      duration: 250,
-      smooth: true
-    })
-  }
-
-  const handleScrollToAbout = () => {
-    scroll.scrollTo('about', {
-      duration: 250,
-      smooth: true
-    })
-  }
+  const handleSettingsClick = () => {
+    navigate('/Settings');
+    console.log("Settings öğesi tıklandı!");
+    // Ek olay işlemlerini buraya ekleyebilirsiniz
+  };
 
   return (
-    <ReactstrapNavbar className="navbar navbar-expand-lg bg-body-tertiary">
-      <div className="container-fluid">
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <Nav className="navbar-nav">
-            <NavItem>
-              <Link onClick={handleScrollToTop} smooth={true} className="nav-link active" href="#">Home</Link>
-            </NavItem>
-            <NavItem>
-              <Link onClick={handleScrollToProducts} to="products" smooth={true} className="nav-link" href=''>Products</Link>
-            </NavItem>
-            <NavItem>
-              <Link onClick={handleScrollToAbout} to="about" smooth={true} className="nav-link" href=''>About Us</Link>
-            </NavItem>
-            <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                Profile
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem>My Cart</DropdownItem>
-                <DropdownItem>Settings</DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </Nav>
-        </div>
+    <Navbar className="navbar-expand-lg bg-body-tertiary">
+      <button
+        className="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span className="navbar-toggler-icon"></span>
+      </button>
+      <div className="collapse navbar-collapse" id="navbarNavDropdown">
+        <Nav className="navbar-nav mr-auto">
+          <NavItem>
+            <button className="btn btn-link nav-link">Home</button>
+          </NavItem>
+          <NavItem>
+            <button className="btn btn-link nav-link">About Us</button>
+          </NavItem>
+        </Nav>
+        <Nav className="ml-auto">
+          <UncontrolledDropdown nav inNavbar>
+            <DropdownToggle nav caret>
+              Profile
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem onClick={handleSettingsClick}>Settings</DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </Nav>
+        <Nav>
+          <button className="btn btn-link nav-link">
+            <BsFillBasketFill />
+          </button>
+        </Nav>
       </div>
-    </ReactstrapNavbar>
+    </Navbar>
   );
-}
+};
 
-export default Navbar;
+export default CustomNavbar;
+
+//.navbar {
+//   background-color: #your_color;
+// }
