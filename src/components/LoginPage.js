@@ -90,19 +90,20 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
     }
 
     try {
-      const uResponse = await axios.get(
-        `http://localhost:4000/members?username=${username}`
-      );
-      const eResponse = await axios.get(
-        `http://localhost:4000/members?email=${email}`
-      );
+      const uResponse = await axios.post("http://localhost:4000/members/username", {
+        username: username,
+      })
 
-      if (uResponse.data.length > 0) {
+      const eResponse = await axios.post("http://localhost:4000/members/email", {
+        email: email,
+      })
+
+      if (uResponse.data.success) {
         setError("Username is taken");
         return;
       }
 
-      if (eResponse.data.length > 0) {
+      if (eResponse.data.success) {
         setError("Email is already registered");
         return;
       }
