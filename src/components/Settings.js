@@ -12,22 +12,63 @@ function Settings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      // MongoDB'ye güncelleme isteği gönderme
-      await axios.put("/api/members", {
-        address,
-        phoneNumber,
-        username,
-        email,
-        password,
-      });
-
-      console.log("Değişiklikler kaydedildi");
-    } catch (error) {
-      console.log("Güncelleme hatası:", error);
-    }
   };
+
+  const handleInfoChange = async () =>{
+    try {
+      const response = await axios.post('http://localhost:4000/members/login', null, { withCredentials: true });
+      const memberId = response.data.memberId;
+
+      if(response.data.success){
+        try {
+          var result = await axios.put(`http://localhost:4000/members/${memberId}`, {
+            addres: address,
+            phoneNumber: phoneNumber,
+            username: username,
+            email: email,
+            password: password,
+            }, { withCredentials: true });
+
+          if(result.data.success){
+            console.log("Değişiklikler kaydedildi");
+          }
+          else console.log("Değişiklikler kaydedilemedi");
+        } 
+        catch (error) {
+          console.log("Güncelleme hatası:", error);
+        }
+      }
+      else console.log('The member id not represented in the database')
+      
+    } catch (error) {
+      console.log("Error finding member", error);
+    }
+  }
+
+  const handleDeleteMember = async () =>{
+    try {
+      const response = await axios.post('http://localhost:4000/members/login', null, { withCredentials: true });
+      const memberId = response.data.memberId;
+
+      if(response.data.success){
+        try {
+          var result = await axios.delete(`http://localhost:4000/members/${memberId}`, { withCredentials: true });
+
+          if(result.data.success){
+            console.log("Profil silindi");
+          }
+          else console.log("Profil silinemedi");
+        } 
+        catch (error) {
+          console.log("Güncelleme hatası:", error);
+        }
+      }
+      else console.log('The member id is not represented in the database')
+      
+    } catch (error) {
+      console.log("Error finding member", error);
+    }
+  }
 
   return (
     <div>
@@ -92,11 +133,11 @@ function Settings() {
                 />
               </FormGroup>
               <div className="d-flex justify-content-between">
-                <Button type="submit" color="primary">
+                <Button onClick={handleInfoChange} type="submit" color="primary">
                   Değişikleri Kaydet
                 </Button>
                 <div style={{ width: "10px" }} /> {/* Boşluk */}
-                <Button type="submit" color="primary">
+                <Button onClick={handleDeleteMember} type="submit" color="primary">
                   Profilimi Sil
                 </Button>
               </div>
