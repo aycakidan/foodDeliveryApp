@@ -2,18 +2,59 @@ const { MongoClient } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { default: mongoose } = require('mongoose');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+var cookieParser = require('cookie-parser');
+const { ObjectId } = require('mongodb');
 
-  // Connection URL
-  const url = 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/?retryWrites=true&w=majority';
-  const client = new MongoClient(url);
+// Connection URL
+const url = 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/?retryWrites=true&w=majority';
 
   // Database Name
 const dbName = 'FoodDeliveryDB';
 
 const app = new express();
 
-app.use(cors());
+const client = new MongoClient(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+  // Configure session store
+const store = new MongoDBStore({
+  uri: 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/FoodDeliveryDB?retryWrites=true&w=majority',
+  collection: 'Members'
+});
+
+// Catch errors in session store
+store.on('error', function (error) {
+  console.error('Session store error:', error);
+});
+
+// Configure session middleware
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  store: store,
+  cookie: {
+    // Cookie name
+    name: 'App Session',
+
+    // Set the cookie options
+    maxAge: 3600000, // Cookie expiration time in milliseconds
+    secure: true, // Set to true if using HTTPS
+    httpOnly: true, // Prevent client-side JavaScript access
+    sameSite: 'strict', // Set the SameSite attribute (strict, lax, or none)
+  }
+}));
+
+app.use(cookieParser());
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 const port = 4000;
@@ -51,8 +92,9 @@ class MongoDatabase{
         const memberData = req.body;
 
         const members = await Database.collection('Members');
-        await members.insertOne(memberData);
-
+        const member = await members.insertOne(memberData);
+        
+        req.session.memberId = member.ops[0]._id;
         res.status(201).json({ message: 'Item inserted successfully' });
       } catch (error) {
         console.error('Error inserting item:', error);
@@ -73,12 +115,18 @@ class MongoDatabase{
 
       try {
         const members = await Database.collection('Members');
-        // Perform the database query to check if the user is a member
         const member = await members.findOne({ username: username, password: password });
 
         if (member) {
-          // Member exists, send a success response
-          res.json({ success: true, message: 'Member login successful' });
+          req.session.memberId = member._id;
+          req.session.save((error) => {
+            if (error) {
+              console.error('Error saving session:', error);
+              res.status(500).json({ success: false, error: 'Error saving session' });
+            } else {
+              res.json({ success: true, memberId: req.session.memberId });
+            }
+          });
         } else {
           // Member does not exist or invalid credentials, send an error response
           res.json({ success: false, message: 'Invalid email or password' });
@@ -146,15 +194,14 @@ class MongoDatabase{
   }
 
   async DeleteMember(){
-    app.delete('/members/:id', async (req, res) => {
+    app.delete(`/members/:id`, async (req, res) => {
       try {
-        const id = req.params.id;
-
+        const memberId = req.session.memberId;
         const members = await Database.collection('Members');
-        const member = await members.findOne({ _id: id });
+        const member = await members.findOne({ _id: memberId });
 
         if(member){ 
-          await member.deleteOne({ _id: id });
+          await members.deleteOne({ _id: memberId });
           res.json({ success: true, message: 'Member deleted successfully' });
         }
         else {
@@ -169,24 +216,13 @@ class MongoDatabase{
   }
 
   async AddMemberInfo(){
-
-    const memberSchema = new mongoose.Schema({
-      firstName: String,
-      lastName: String,
-      email: String,
-      password: String,
-      address: String,
-      phoneNumber: String
-    });
-
-    const member = mongoose.model('Member', memberSchema);
-
     app.put('/members/:id', async (req, res) => {
       try {
-        const memberId = req.params.id;
+        const memberId = req.session.memberId;
         const updatedData = req.body;
 
-        const result = await member.findByIdAndUpdate(memberId, updatedData);
+        const members = await Database.collection('Members');
+        const result = await members.updateOne({ _id: memberId }, { $set: updatedData })
     
         if (result) {
           res.json({ success: true, message: 'Member updated successfully' });
@@ -199,14 +235,35 @@ class MongoDatabase{
       }
     });
   }
+
+  async GetId(){
+    app.get('/members/login', async (req, res) => {
+      const members = await Database.collection('Members');
+      const memberId = req.session.memberId;
+
+      if(ObjectId.isValid(memberId)){
+        const member = await members.findOne({ _id: ObjectId(memberId) });
+
+        if ( member ) {
+          res.json({ success: true, memberId: ObjectId(memberId) });
+        } else {
+          res.status(401).json({ success: false, error: 'Member ID not found in session '+ memberId, memberId: ObjectId(memberId) });
+        }
+      }
+    });
+  }
 }
     
 async function InitializeExpress(){
   var db = new MongoDatabase();
   
-  await client.connect()
-    console.log('Connected successfully to server');
-    Database = client.db(dbName);
+  await client.connect().then(() => {
+    console.log('Connected to MongoDB');
+  }).catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
+  
+  Database = client.db(dbName);
 
   await db.GetCollections();
   await db.AddMember();
@@ -214,6 +271,7 @@ async function InitializeExpress(){
   await db.DeleteMember();
   await db.AddMemberInfo();
   await db.RegisterCheck();
+  await db.GetId();
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

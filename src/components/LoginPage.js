@@ -20,6 +20,7 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
 
       if (response.data.success) {
         console.log("Login successful");
+        localStorage.setItem('MemberId', response.data.memberId)
 
         if (username === "admin") {
           handleLogin("admin");
@@ -32,6 +33,8 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
     } catch (error) {
       console.error("Giriş hatası:", error);
     }
+
+    
   };
 
   return (
