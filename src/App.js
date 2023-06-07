@@ -5,7 +5,8 @@ import LoginPage from './components/LoginPage.js';
 import HomePage from './components/HomePage.js';
 import Settings from './components/Settings.js';
 import './components/styles/LoginPage.css';
-
+import Products from './components/Products.js';
+import Cart from './components/Cart.js'
 function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
@@ -30,6 +31,14 @@ function App() {
               <Route
                 path="/settings" Component={Settings}
                 element={isLoggedIn ? <Settings /> : <Navigate to="/settings" />}
+              />
+              <Route
+                path="/products" Component={Products}
+                element={isLoggedIn ? <Products /> : <Navigate to="/products" />}
+              />
+              <Route
+                path="/cart" Component={Cart}
+                element={isLoggedIn ? <Cart /> : <Navigate to="/cart" />}
               />
             </Routes>
           </Col>

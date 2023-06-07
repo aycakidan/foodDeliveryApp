@@ -190,9 +190,7 @@ function LoginPage() {
 
   return (
     <div>
-      <div className="left-section">
-        <img src="/path/to/user-image.jpg" alt="User" />
-      </div>
+      
       <div className="right-section">
         {loginFormVisible ? (
           <LoginForm

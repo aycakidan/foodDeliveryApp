@@ -1,31 +1,46 @@
-import React from 'react';
-import { Navbar, Nav, NavItem, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { BsFillBasketFill } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
-import { Link, animateScroll as scroll } from 'react-scroll';
+import React from "react";
+import {
+  Navbar,
+  Nav,
+  NavItem,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
+import { BsFillBasketFill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { Link, animateScroll as scroll } from "react-scroll";
+import './styles/Navbar.css';
 
 const CustomNavbar = () => {
-
   const handleScrollToTop = () => {
     scroll.scrollToTop({
       duration: 0,
-      smooth: true
+      smooth: true,
     });
-  }
+  };
 
   const handleScrollToAbout = () => {
-    scroll.scrollTo('about', {
+    scroll.scrollTo("about", {
       duration: 250,
-      smooth: true
-    })
-  }
-
+      smooth: true,
+    });
+  };
+  const handleCartClick = () => {
+    navigate("/cart");
+    console.log("Cart öğesi tıklandı!");
+    // Ek olay işlemlerini buraya ekleyebilirsiniz
+  };
   const navigate = useNavigate();
 
   const handleSettingsClick = () => {
-    navigate('/Settings');
+    navigate("/Settings");
     console.log("Settings öğesi tıklandı!");
     // Ek olay işlemlerini buraya ekleyebilirsiniz
+  };
+  const handleProductsClick = () => {
+    navigate("/Products");
   };
 
   return (
@@ -45,12 +60,30 @@ const CustomNavbar = () => {
         <Nav className="navbar-nav mr-auto">
           <NavItem>
             <Link>
-              <button onClick={handleScrollToTop} className="btn btn-link nav-link">Home</button>
+              <button
+                onClick={handleScrollToTop}
+                className="btn btn-link nav-link"
+              >
+                Home
+              </button>
             </Link>
           </NavItem>
           <NavItem>
             <Link>
-              <button onClick={handleScrollToAbout} to="about" className="btn btn-link nav-link">About Us</button>
+            <button onClick={handleProductsClick} className="btn btn-link nav-link">
+            Menu
+          </button>
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link>
+              <button
+                onClick={handleScrollToAbout}
+                to="about"
+                className="btn btn-link nav-link"
+              >
+                About Us
+              </button>
             </Link>
           </NavItem>
         </Nav>
@@ -60,12 +93,14 @@ const CustomNavbar = () => {
               Profile
             </DropdownToggle>
             <DropdownMenu right>
-              <DropdownItem onClick={handleSettingsClick}>Settings</DropdownItem>
+              <DropdownItem onClick={handleSettingsClick}>
+                Settings
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
         <Nav>
-          <button className="btn btn-link nav-link">
+          <button onClick={handleCartClick} className="btn btn-link nav-link">
             <BsFillBasketFill />
           </button>
         </Nav>

@@ -8,7 +8,7 @@ function HomePage() {
       <Container className="mt-sm-3">
         <Row>
           <Col xs={12} className="d-flex justify-content-center">
-            <CustomNavbar />
+            <CustomNavbar />           
           </Col>
         </Row>
       </Container>
