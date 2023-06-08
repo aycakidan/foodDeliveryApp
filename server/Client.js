@@ -242,14 +242,49 @@ class MongoDatabase{
       const memberId = req.session.memberId;
 
       if(ObjectId.isValid(memberId)){
-        const member = await members.findOne({ _id: ObjectId(memberId) });
+        const member = await members.findOne({ _id: memberId });
 
         if ( member ) {
-          res.json({ success: true, memberId: ObjectId(memberId) });
+          res.json({ success: true, user: member });
         } else {
           res.status(401).json({ success: false, error: 'Member ID not found in session '+ memberId, memberId: ObjectId(memberId) });
         }
       }
+    });
+  }
+
+  async SendMail(){
+    app.post('/send-email', (req, res) => {
+      // Extract the necessary information from the request
+      const { recipientEmail, orderDetails } = req.body;
+    
+      // Create a Nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'canaltay2001@windowslive.com',
+          pass: 'test'
+        }
+      });
+    
+      // Compose the email message
+      const mailOptions = {
+        from: 'canaltay2001@windowslive.com',
+        to: recipientEmail,
+        subject: 'Order Confirmation',
+        text: `Thank you for your order. Here are your order details: ${orderDetails}`
+      };
+    
+      // Send the email
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending email:', error);
+          res.status(500).json({ message: 'Error sending email' });
+        } else {
+          console.log('Email sent:', info.response);
+          res.json({ message: 'Email sent successfully' });
+        }
+      });
     });
   }
 }

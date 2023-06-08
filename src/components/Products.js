@@ -1,45 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, CardBody, CardTitle, Button } from "reactstrap";
 import CustomNavbar from "./Navbar";
 import Cart from "./Cart";
+import axios from "axios";
 
 function Products() {
-  const categories = [
-    {
-      label: "Ana Yemekler",
-      items: [
-        { name: "Yemek 1", description: "Açıklama 1" },
-        { name: "Yemek 2", description: "Açıklama 2" },
-        { name: "Yemek 3", description: "Açıklama 3" }
-      ]
-    },
-    {
-      label: "İçecekler",
-      items: [
-        { name: "İçecek 1", description: "Açıklama 1" },
-        { name: "İçecek 2", description: "Açıklama 2" }
-      ]
-    },
-    {
-      label: "Çorba",
-      items: [
-        { name: "Çorba 1", description: "Açıklama 1" },
-        { name: "Çorba 2", description: "Açıklama 2" }
-      ]
-    },
-    {
-      label: "Tatlı",
-      items: [
-        { name: "Tatlı 1", description: "Açıklama 1" },
-        { name: "Tatlı 2", description: "Açıklama 2" }
-      ]
-    }
-  ];
+  
+  const [foods, setFoods] = useState([]);
+
+  useEffect(() => {
+
+    const fetchFoods = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/foods');
+        const fetchedFoods = response.data;
+    
+        const categories = fetchedFoods.map((food) => ({
+          label: food.label,
+          items: food.items.map((item) => ({
+            name: item.name,
+            description: item.price,
+          })),
+        }));
+    
+        setFoods(categories);
+      } catch (error) {
+        console.error('Error getting foods:', error);
+      }
+    };
+
+    fetchFoods();
+  }, []);
 
   const [cartItems, setCartItems] = useState([]);
 
   const handleAddToCart = (itemName) => {
     const existingItem = cartItems.find((item) => item.name === itemName);
+
     if (existingItem) {
       existingItem.quantity += 1;
       setCartItems([...cartItems]);
@@ -58,7 +55,7 @@ function Products() {
           </Col>
         </Row>
 
-        {categories.map((category, index) => (
+        {foods.map((category, index) => (
           <Row key={index} className="mt-3">
             <Col>
               <h3>{category.label}</h3>

@@ -17,7 +17,7 @@ function Settings() {
   const handleInfoChange = async () =>{
     try {
       const response = await axios.post('http://localhost:4000/members/login', null, { withCredentials: true });
-      const memberId = response.data.memberId;
+      const memberId = response.data.member._id;
 
       if(response.data.success){
         try {
