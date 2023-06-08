@@ -65,7 +65,7 @@ function Products() {
                     <Card>
                       <CardBody>
                         <CardTitle>{item.name}</CardTitle>
-                        <p>{item.description}</p>
+                        <p>{item.description}$</p>
                         <div className="d-flex justify-content-between">
                           <Button color="success" onClick={() => handleAddToCart(item.name)}>+</Button>
                           <Button color="danger">-</Button>

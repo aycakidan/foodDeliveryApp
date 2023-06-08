@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, CardBody, CardTitle, Button } from "reactstrap";
 import CustomNavbar from "./Navbar";
+import axios from "axios";
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);

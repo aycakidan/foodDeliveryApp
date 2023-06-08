@@ -84,6 +84,40 @@ class MongoDatabase{
       }
     });
   }
+
+  async DeleteFood(){
+    app.delete('/foods/:categoryIndex/:foodIndex', async (req, res) => {
+      try {
+        const foods = await Database.collection('Foods').find().toArray();
+        const categoryIndex = parseInt(req.params.categoryIndex);
+        const foodIndex = parseInt(req.params.foodIndex);
+    
+        if (
+          Number.isNaN(categoryIndex) ||
+          categoryIndex < 0 ||
+          Number.isNaN(foodIndex) ||
+          foodIndex < 0
+        ) {
+          return res.status(400).json({ error: 'Invalid category or food index' });
+        }
+    
+        if (
+          categoryIndex >= foods.length ||
+          foodIndex >= foods[categoryIndex].items.length
+        ) {
+          return res.status(404).json({ error: 'Invalid category or food index' });
+        }
+    
+        foods[categoryIndex].items.splice(foodIndex, 1);
+        await Database.collection('Foods').updateOne({ label: foods[categoryIndex].label }, { $set: foods[categoryIndex] });
+    
+        res.status(200).json({ success: true });
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+  }
   
   // Register member
   async AddMember(){
@@ -307,6 +341,8 @@ async function InitializeExpress(){
   await db.AddMemberInfo();
   await db.RegisterCheck();
   await db.GetId();
+  await db.SendMail();
+  await db.DeleteFood();
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

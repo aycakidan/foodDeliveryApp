@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import AdminNavbar from "./AdminNavbar";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
@@ -16,10 +16,23 @@ const AdminPage = () => {
 
       const data = await response.json();
       setFood(data);
-      console.log(data);
     };
     handleFoods();
   }, []);
+
+  const handleDeleteFood = async (categoryIndex, foodIndex) => {
+    try {
+      await fetch(`http://localhost:4000/foods/${categoryIndex}/${foodIndex}`, {
+        method: 'DELETE',
+      });
+      
+      const updatedFoods = [...food];
+      updatedFoods[categoryIndex].items.splice(foodIndex, 1);
+      setFood(updatedFoods);
+    } catch (error) {
+      console.error('Error deleting food:', error);
+    }
+  };  
 
   return (
     <>
@@ -44,16 +57,18 @@ const AdminPage = () => {
           </div>
         </div>
         {
-          food.map((item,index)=>{
-            return <div className="food">
-              <div>
-              <img src="" alt="" />
-              <h3>{item.item}</h3>
-              <p>{item.price}$</p>
+          food.map((item, index) => 
+            item.items.map((food, foodIndex) => (
+              <div key={`${index}-${foodIndex}`} className="food">
+                <div>
+                  <img src={food.image} alt={food.name} />
+                  <h3>{food.name}</h3>
+                  <p>{food.price}$</p>
+                </div>
+                <button onClick={() => handleDeleteFood(index, foodIndex)}>Delete</button>
               </div>
-              <button>Delete</button>
-            </div>
-          })
+            ))
+          )
         }
         <Footer/>
       </AdminContainer>
