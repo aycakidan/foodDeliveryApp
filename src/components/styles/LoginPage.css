@@ -1,14 +1,16 @@
 /* LoginPage.css */
 body {
-  /*background-image: url("images.jpg");*/
-  background-size: cover;
+  background-image: url("loginBackgrnjpg.jpg");
+  background-size: cover; 
 
 }
 form{
-    margin-top: 20px;
+    margin-top: 40px;
     font-size: 20px;
     font-weight:bold;
     background-color: #fff;
+    
+    
     
 }
 
@@ -22,18 +24,21 @@ h2 {
   
   label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     font-weight:bold; 
+    
 
   }
   
   input[type="text"],
   input[type="password"],
   input[type="email"] {
+    font-family: Arial, Helvetica, sans-serif;;
     width: 100%;
-    padding: 8px;
-    margin-bottom: 30px;
+    padding: 10px;
+    margin-bottom: 40px;
     font-weight:bold; 
+    
   }
   
   button[type="submit"] {
@@ -42,11 +47,22 @@ h2 {
     border: none;
     padding: 10px 20px;
     cursor: pointer;
+    
   }
   
   button[type="submit"]:hover {
     background-color: #0056b3;
+    width: 100%;
+  
+  }
+
+  div {
+    background-position: top right;
+    background-image: url("logo.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     
   }
+  
 
   

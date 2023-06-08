@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Form, FormGroup, Label, Input, Button } from "reactstrap";
 import CustomNavbar from "./Navbar";
 import axios from "axios";
+import "./styles/Settings.css";
 
 function Settings() {
   const [address, setAddress] = useState("");
