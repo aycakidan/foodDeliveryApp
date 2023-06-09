@@ -39,7 +39,9 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>LOGIN</h2>
+      <h1>
+      <font size="10" color="black" face="verdana"> LOGIN </font>
+      </h1>
       {error && <p className="error">{error}</p>} {/* Hata mesajını ekranda göstermek için */}
       <div>
         <label>User Name:</label>
