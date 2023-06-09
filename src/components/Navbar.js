@@ -68,7 +68,7 @@ const CustomNavbar = () => {
                 onClick={handleScrollToTop}
                 className="btn btn-link nav-link"
               >
-                Home
+                                   Home        
               </button>
             </Link>
           </NavItem>
@@ -79,6 +79,7 @@ const CustomNavbar = () => {
           </button>
             </Link>
           </NavItem>
+          
           <NavItem>
             <Link>
               <button
@@ -90,6 +91,7 @@ const CustomNavbar = () => {
               </button>
             </Link>
           </NavItem>
+          
         </Nav>
         <Nav className="ml-auto">
           <UncontrolledDropdown nav inNavbar>

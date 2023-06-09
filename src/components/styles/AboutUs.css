@@ -12,8 +12,20 @@ h2 {
 
   p {
     color: 
-white;
+rgb(7, 0, 0);
     background-color: 
-rgb(244, 15, 122);
+rgb(244, 236, 240);
 }
 
+
+
+.AboutUs-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
