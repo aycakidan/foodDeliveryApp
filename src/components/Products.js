@@ -33,9 +33,9 @@ function Products() {
     
   }, []);
 
-  const handleAddToCart = (itemName) => {
+  const handleAddToCart = (item) => {
     let updatedCartItems;
-
+    const itemName = item.name
     const existingItem = cartItems.find((item) => item.name === itemName);
 
     if (existingItem) {
@@ -43,7 +43,7 @@ function Products() {
         item.name === itemName ? { ...item, quantity: item.quantity + 1 } : item
       );
     } else {
-      const newItem = { name: itemName, quantity: 1 };
+      const newItem = { name: itemName, price: item.price, quantity: 1 };
       updatedCartItems = [...cartItems, newItem];
     }
 
@@ -70,7 +70,7 @@ function Products() {
                             <p>{item.price}$</p>
                             <Button
                               color="success"
-                              onClick={() => handleAddToCart(item.name)}
+                              onClick={() => handleAddToCart(item)}
                             >
                               {existingItem ? `Added (${existingItem.quantity})` : "+"}
                             </Button>
