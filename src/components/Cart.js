@@ -38,9 +38,13 @@ import axios from "axios";
   
     return (
       <div className="mt-3">
-        <h3> My Cart</h3>
+        <h3> 
+        
+        <font color="pink" size="7" face="tahoma">My Cart</font>
+        </h3>
         {cartItems.length === 0 ? (
-          <p>Your cart is empty</p>
+          <p>Your cart is empty
+          </p>
         ) : (
           cartItems.map((item, index) => (
             <Card key={index} className="mb-3">

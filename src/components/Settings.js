@@ -99,10 +99,13 @@ function Settings() {
         </Row>
         <Row>
           <Col xs={12} className="mt-3">
-            <h2>Edit Profile</h2>
+            
+            <font size="10" color="white" face="Roboto"> Edit Profile </font>
+
+            
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label for="address">Adres Ekle</Label>
+                <Label for="address">Add address</Label>
                 <Input
                   type="text"
                   name="address"
@@ -112,7 +115,7 @@ function Settings() {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="phoneNumber">Numara Ekle</Label>
+                <Label for="phoneNumber">Add phoneNumber</Label>
                 <Input
                   type="text"
                   name="phoneNumber"
@@ -122,7 +125,7 @@ function Settings() {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="username">Kullanıcı Adı Güncelle</Label>
+                <Label for="username">Update username</Label>
                 <Input
                   type="text"
                   name="username"
@@ -132,7 +135,7 @@ function Settings() {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="email">Mail Güncelle</Label>
+                <Label for="email">Update e-mail</Label>
                 <Input
                   type="email"
                   name="email"
@@ -142,7 +145,7 @@ function Settings() {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="password">Şifre Değiştir</Label>
+                <Label for="password">Change password</Label>
                 <Input
                   type="password"
                   name="password"
@@ -153,11 +156,11 @@ function Settings() {
               </FormGroup>
               <div className="d-flex justify-content-between">
                 <Button onClick={handleInfoChange} type="submit" color="primary">
-                  Değişikleri Kaydet
+                  Save
                 </Button>
                 <div style={{ width: "10px" }} /> {/* Boşluk */}
                 <Button onClick={handleDeleteMember} type="submit" color="primary">
-                  Profilimi Sil
+                  Delete my profile
                 </Button>
               </div>
             </Form>

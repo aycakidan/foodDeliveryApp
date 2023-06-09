@@ -59,7 +59,7 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
       </div>
       <button type="submit">LOGIN</button>
       <p>
-        Not A member?{" "}
+        Not A member?  {" "}
         <button type="button" onClick={showRegistrationForm}>
           Kaydol
         </button>

@@ -13,7 +13,10 @@ function AboutUs() {
           <Col xs={12} className="d-flex align-items-center">
             <div>
             
-              <h2>About Us</h2>
+              <h2>
+
+              <font color="white" size="10" face="tahoma" >About Us</font>
+              </h2>
                  
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce

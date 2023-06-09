@@ -58,7 +58,10 @@ function Products() {
           <Col xs={12}>
             {foods.map((category, index) => (
               <div key={index}>
-                <h3>{category.label}</h3>
+                <h3>
+                <font color="pink" size="5" face="tahoma">{category.label}</font>
+                
+                </h3>
                 <Row>
                   {category.items.map((item, itemIndex) => {
                     const existingItem = cartItems.find((cartItem) => cartItem.name === item.name);
