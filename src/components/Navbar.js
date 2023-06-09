@@ -43,6 +43,10 @@ const CustomNavbar = () => {
     navigate("/Products");
   };
 
+  const handleAboutClick = () => {
+    navigate("/AboutUs");
+  };
+
   return (
     <Navbar className="navbar-expand-lg bg-body-tertiary">
       <button
@@ -78,7 +82,7 @@ const CustomNavbar = () => {
           <NavItem>
             <Link>
               <button
-                onClick={handleScrollToAbout}
+                onClick={handleAboutClick}
                 to="about"
                 className="btn btn-link nav-link"
               >
@@ -99,11 +103,11 @@ const CustomNavbar = () => {
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav>
-        <Nav>
+        {/* <Nav>
           <button onClick={handleCartClick} className="btn btn-link nav-link">
             <BsFillBasketFill />
           </button>
-        </Nav>
+        </Nav> */}
       </div>
     </Navbar>
   );

@@ -3,6 +3,7 @@ import AdminNavbar from "./AdminNavbar";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Footer from "./Footer";
+import axios from "axios";
 
 const AdminPage = () => {
   const [food, setFood] = useState([]);
@@ -34,10 +35,26 @@ const AdminPage = () => {
     }
   };  
 
+  const newFood = {
+    label: "Main Courses",
+    name: 'Pizza',
+    price: 10.99
+  };
+
+  const handleAddFood = async () => {
+    axios.post('http://localhost:4000/foods', newFood)
+    .then(response => {
+      console.log(response.data); // Handle the response from the server
+    })
+    .catch(error => {
+      console.error(error); // Handle any errors
+    });
+  }
+
   return (
     <>
       <AdminContainer>
-        <AdminNavbar />
+        <AdminNavbar />     
 
         <div className="info">
           <div>
@@ -56,6 +73,11 @@ const AdminPage = () => {
             <h4>Increased by 5%</h4>
           </div>
         </div>
+
+        <div>
+        <button color="success" onClick={handleAddFood}>+</button>
+        </div>
+
         {
           food.map((item, index) => 
             item.items.map((food, foodIndex) => (

@@ -118,6 +118,27 @@ class MongoDatabase{
       }
     });
   }
+
+  async AddFood(){
+    app.post('/foods', async (req, res) => {
+      try {
+        const newFood = req.body; 
+        const foods = await Database.collection('Foods')
+        const food = foods.findOneAndUpdate({ label: newFood.label }, 
+          { $push: {items: {name: newFood.name, price: newFood.price}} })
+
+          if(food){
+            res.status(201).json({ success: true, food: food });
+          }
+          else{
+            res.status(500).json({ success: false, error: 'Failed to create new food item' });
+          }       
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, error: 'Failed to create new food item' });
+      }
+    });
+  }
   
   // Register member
   async AddMember(){
@@ -354,6 +375,7 @@ async function InitializeExpress(){
   await db.GetId();
   await db.SendMail();
   await db.DeleteFood();
+  await db.AddFood();
 
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
