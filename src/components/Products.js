@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, CardBody, CardTitle, Button } from "reactstrap";
 import CustomNavbar from "./Navbar";
-import Cart from "./Cart";
 import axios from "axios";
 
 function Products() {
@@ -35,15 +34,20 @@ function Products() {
   const [cartItems, setCartItems] = useState([]);
 
   const handleAddToCart = (itemName) => {
+    let updatedCartItems;
+
     const existingItem = cartItems.find((item) => item.name === itemName);
 
     if (existingItem) {
-      existingItem.quantity += 1;
-      setCartItems([...cartItems]);
+      updatedCartItems = cartItems.map((item) =>
+        item.name === itemName ? { ...item, quantity: item.quantity + 1 } : item
+      );
     } else {
       const newItem = { name: itemName, quantity: 1 };
-      setCartItems([...cartItems, newItem]);
+      updatedCartItems = [...cartItems, newItem];
     }
+
+    setCartItems(updatedCartItems);
   };
 
   return (
@@ -78,12 +82,6 @@ function Products() {
             </Col>
           </Row>
         ))}
-
-        <Row>
-          <Col className="mt-3">
-            <Cart cartItems={cartItems} />
-          </Col>
-        </Row>
       </Container>
     </div>
   );

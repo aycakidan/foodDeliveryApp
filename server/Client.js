@@ -1,11 +1,10 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 var cookieParser = require('cookie-parser');
-const { ObjectId } = require('mongodb');
 
 // Connection URL
 const url = 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/?retryWrites=true&w=majority';
@@ -43,9 +42,10 @@ app.use(session({
 
     // Set the cookie options
     maxAge: 3600000, // Cookie expiration time in milliseconds
-    secure: true, // Set to true if using HTTPS
-    httpOnly: true, // Prevent client-side JavaScript access
+    secure: false, // Set to true if using HTTPS
+    httpOnly: false, // Prevent client-side JavaScript access
     sameSite: 'strict', // Set the SameSite attribute (strict, lax, or none)
+    domain: 'localhost',
   }
 }));
 
@@ -123,12 +123,14 @@ class MongoDatabase{
   async AddMember(){
     app.post('/members', async (req, res) => {
       try {
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
         const memberData = req.body;
 
         const members = await Database.collection('Members');
-        const member = await members.insertOne(memberData);
+        await members.insertOne(memberData);
+        const m = await members.findOne({ email: memberData.email })
         
-        req.session.memberId = member.ops[0]._id;
+        req.session.memberId = m.email;
         res.status(201).json({ message: 'Item inserted successfully' });
       } catch (error) {
         console.error('Error inserting item:', error);
@@ -148,11 +150,12 @@ class MongoDatabase{
       }
 
       try {
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
         const members = await Database.collection('Members');
         const member = await members.findOne({ username: username, password: password });
 
         if (member) {
-          req.session.memberId = member._id;
+          req.session.memberId = member.email;
           req.session.save((error) => {
             if (error) {
               console.error('Error saving session:', error);
@@ -230,12 +233,14 @@ class MongoDatabase{
   async DeleteMember(){
     app.delete(`/members/:id`, async (req, res) => {
       try {
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
         const memberId = req.session.memberId;
         const members = await Database.collection('Members');
-        const member = await members.findOne({ _id: memberId });
+        const member = await members.findOne({ email: memberId });
 
         if(member){ 
-          await members.deleteOne({ _id: memberId });
+          await members.deleteOne({ email: memberId });
+          req.session.memberId = NaN
           res.json({ success: true, message: 'Member deleted successfully' });
         }
         else {
@@ -252,13 +257,15 @@ class MongoDatabase{
   async AddMemberInfo(){
     app.put('/members/:id', async (req, res) => {
       try {
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
         const memberId = req.session.memberId;
         const updatedData = req.body;
 
         const members = await Database.collection('Members');
-        const result = await members.updateOne({ _id: memberId }, { $set: updatedData })
+        const result = await members.updateOne({ email: memberId }, { $set: updatedData })
     
         if (result) {
+          req.session.memberId = updatedData;
           res.json({ success: true, message: 'Member updated successfully' });
         } else {
           res.json({ success: false, message: 'Member not found' });
@@ -272,18 +279,22 @@ class MongoDatabase{
 
   async GetId(){
     app.get('/members/login', async (req, res) => {
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
       const members = await Database.collection('Members');
       const memberId = req.session.memberId;
 
-      if(ObjectId.isValid(memberId)){
-        const member = await members.findOne({ _id: memberId });
+      // if(memberId){
+        const member = await members.findOne({ email: memberId });
 
         if ( member ) {
-          res.json({ success: true, user: member });
+          res.json({ success: true, member: member });
         } else {
-          res.status(401).json({ success: false, error: 'Member ID not found in session '+ memberId, memberId: ObjectId(memberId) });
+          res.status(401).json({ success: false, error: 'Member ID not found in session '+ member, member: member });
         }
-      }
+      // }
+      // else {
+      //   res.status(400).json({ success: false, error: 'Invalid member ID: ' + memberId });
+      // }
     });
   }
 

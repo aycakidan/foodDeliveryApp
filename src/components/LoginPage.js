@@ -16,7 +16,7 @@ function LoginForm({ handleLogin, showRegistrationForm }) {
       const response = await axios.post("http://localhost:4000/members/login", {
         username: username,
         password: password,
-      });
+      }, { withCredentials: true });
 
       if (response.data.success) {
         console.log("Login successful");
@@ -115,7 +115,7 @@ function RegistrationForm({ handleLogin, showLoginForm }) {
         username: username,
         password: password,
         email: email,
-      });
+      }, { withCredentials: true });
 
       handleLogin("user");
       console.log("Registered user");
