@@ -5,14 +5,21 @@ import axios from "axios";
   const Cart = ({ cartItems, setCartItems }) => {
 
     const handleOrderConfirmation = async () => {
-      const orderDetails = '...'; // Replace with the actual order details
+      const orderDetails = [];
+      let cost = 0;
+      let count = 0;
+
+      cartItems.forEach((item) => {
+        for (let index = 0; index < item.quantity; index++) {
+          const existingItem = orderDetails.find((item) => item.name === item.name);
+          if(!existingItem) orderDetails.push(item.name);
+          cost += parseFloat(item.price);
+          count += 1;
+        }
+      });    
   
-      try {
-        const response = await axios.get('http://localhost:4000/members/login', null, { withCredentials: true });
-        const memberEmail = response.data.member.email;
-        const recipientEmail = memberEmail;
-  
-        axios.post('http://localhost:4000/send-email', { recipientEmail, orderDetails })
+      try { 
+        axios.post('http://localhost:4000/send-email', { orderDetails, cost, count }, { withCredentials: true }) 
         .then(response => {
           console.log(response.data.message);
         })
@@ -47,6 +54,11 @@ import axios from "axios";
             </Card>
           ))
         )}
+        {cartItems.length > 0 ? (
+          <Button color="success" onClick={handleOrderConfirmation}>
+            Give Order
+          </Button>
+        ) : (null)}
       </div>
     );
   };

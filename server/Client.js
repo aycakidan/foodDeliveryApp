@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 var cookieParser = require('cookie-parser');
+const nodemailer = require('nodemailer');
 
 // Connection URL
 const url = 'mongodb+srv://aycakidan:aycakidan@aycakidan.idv7hli.mongodb.net/?retryWrites=true&w=majority';
@@ -320,25 +321,29 @@ class MongoDatabase{
   }
 
   async SendMail(){
-    app.post('/send-email', (req, res) => {
+    app.post('/send-email', async (req, res) => {
       // Extract the necessary information from the request
-      const { recipientEmail, orderDetails } = req.body;
+      const { orderDetails, cost, count } = req.body;
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      const memberId = req.session.memberId;
+      const members = await Database.collection('Members');
+      const member = await members.findOne({ email: memberId });
     
       // Create a Nodemailer transporter
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-          user: 'canaltay2001@windowslive.com',
-          pass: 'test'
+          user: 'canaltay0631@gmail.com',
+          pass: 'uqhodhgwljkdoqfy'
         }
       });
     
       // Compose the email message
       const mailOptions = {
-        from: 'canaltay2001@windowslive.com',
-        to: recipientEmail,
+        from: 'canaltay0631@gmail.com',
+        to: member.email,
         subject: 'Order Confirmation',
-        text: `Thank you for your order. Here are your order details: ${orderDetails}`
+        text: `Thank you for your order. Here are your order details: You ordered ${count} ${orderDetails}, and the total cost is: ${parseFloat(cost)}.`
       };
     
       // Send the email
