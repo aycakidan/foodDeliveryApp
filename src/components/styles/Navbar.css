@@ -16,7 +16,7 @@
     width: 100%;
   }
   .navbar-nav .nav-link:hover {
-    color: #532323; /* Linklerin üzerine gelindiğinde metin rengi */
+    color: #e30f99; /* Linklerin üzerine gelindiğinde metin rengi */
     background-color: #000; /* Linklerin üzerine gelindiğinde arka plan rengi */
     /* Diğer stilleri buraya ekleyebilirsiniz */
   }
@@ -29,16 +29,17 @@
   }
   
   .dropdown-item {
-    color: #000; /* Dropdown öğelerinin metin rengi */
+    color: #d1b3b3; /* Dropdown öğelerinin metin rengi */
     /* Diğer stilleri buraya ekleyebilirsiniz */
   }
   
   .dropdown-item:hover {
     color: #fff; /* Dropdown öğelerinin üzerine gelindiğinde metin rengi */
-    background-color: #000; /* Dropdown öğelerinin üzerine gelindiğinde arka plan rengi */
+    background-color: #000000; /* Dropdown öğelerinin üzerine gelindiğinde arka plan rengi */
     /* Diğer stilleri buraya ekleyebilirsiniz */
   }
   .navbar-collapse {
     justify-content: flex-end;
   }
+  
   

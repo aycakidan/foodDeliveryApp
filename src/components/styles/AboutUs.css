@@ -1,0 +1,19 @@
+h2 {
+    font-family: 'Anton', sans-serif;
+    font-size:10rem;
+    font-weight: bold;
+    background-image:url('rest.jpeg');
+    
+    background-position:center;
+    color:transparent;
+    background-attachment: fixed;
+  }
+  
+
+  p {
+    color: 
+white;
+    background-color: 
+rgb(244, 15, 122);
+}
+

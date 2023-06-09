@@ -1,5 +1,6 @@
 import { Card, CardBody, CardTitle, CardText, Button } from "reactstrap";
 import axios from "axios";
+import "./styles/Cart.css";
 
   const Cart = ({ cartItems, setCartItems }) => {
 
