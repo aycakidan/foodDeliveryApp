@@ -1,6 +1,8 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import CustomNavbar from "./Navbar";
+import "./styles/AboutUs.css";
+
 
 function AboutUs() {
   return (
@@ -8,9 +10,11 @@ function AboutUs() {
       <CustomNavbar />
       <Container className="mt-sm-3">
         <Row>
-          <Col xs={6} className="d-flex align-items-center">
+          <Col xs={12} className="d-flex align-items-center">
             <div>
-              <h1>Lorem Ipsum</h1>
+            
+              <h2>About Us</h2>
+                 
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
                 varius, metus sed ultrices varius, lorem quam dapibus est, vel
@@ -20,6 +24,7 @@ function AboutUs() {
                 Morbi id dui ut justo scelerisque sagittis. Sed luctus tempus
                 diam, nec tristique purus bibendum sed.
               </p>
+             
             </div>
           </Col>
         </Row>
@@ -27,5 +32,6 @@ function AboutUs() {
     </div>
   );
 }
+
 
 export default AboutUs;
