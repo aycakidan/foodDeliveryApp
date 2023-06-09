@@ -7,6 +7,7 @@ import Settings from './components/Settings.js';
 import './components/styles/LoginPage.css';
 import Products from './components/Products.js';
 import Cart from './components/Cart.js'
+import AboutUs from './components/AboutUs.js';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
@@ -39,6 +40,10 @@ function App() {
               <Route
                 path="/cart" Component={Cart}
                 element={isLoggedIn ? <Cart /> : <Navigate to="/cart" />}
+              />
+              <Route
+                path="/AboutUs" Component={AboutUs}
+                element={isLoggedIn ? <AboutUs/> : <Navigate to="/AboutUs"/>}
               />
             </Routes>
           </Col>

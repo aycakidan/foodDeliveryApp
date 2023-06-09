@@ -2,15 +2,12 @@ import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import CustomNavbar from "./Navbar";
 
-function HomePage() {
+function AboutUs() {
   return (
     <div>
       <CustomNavbar />
       <Container className="mt-sm-3">
         <Row>
-          <Col xs={6} className="text-right">
-            <img src="sol_foto_url" alt="Sol Fotoğraf" />
-          </Col>
           <Col xs={6} className="d-flex align-items-center">
             <div>
               <h1>Lorem Ipsum</h1>
@@ -31,4 +28,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default AboutUs;

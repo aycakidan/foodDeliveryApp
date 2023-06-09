@@ -11,18 +11,36 @@ function Settings() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const initializeForm = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/members/login', null, { withCredentials: true });
+      const member = response.data.member;
+      if(response.data.success){
+        setUsername(member.username)
+        setEmail(member.email)
+      }
+      else{
+        console.log('Can not get member info')
+      }
+    } catch (error) {
+      console.log("Error initializing form", error);
+    }
+  }
+
+  initializeForm();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   };
 
   const handleInfoChange = async () =>{
     try {
-      const response = await axios.post('http://localhost:4000/members/login', null, { withCredentials: true });
-      const memberId = response.data.member._id;
+      const response = await axios.get('http://localhost:4000/members/login', null, { withCredentials: true });
+      const member = response.data.member;
 
       if(response.data.success){
         try {
-          var result = await axios.put(`http://localhost:4000/members/${memberId}`, {
+          var result = await axios.put(`http://localhost:4000/members/${member._id}`, {
             addres: address,
             phoneNumber: phoneNumber,
             username: username,
@@ -48,12 +66,13 @@ function Settings() {
 
   const handleDeleteMember = async () =>{
     try {
-      const response = await axios.post('http://localhost:4000/members/login', null, { withCredentials: true });
-      const memberId = response.data.memberId;
+      const response = await axios.get('http://localhost:4000/members/login', null, { withCredentials: true });
+      const member = response.data.member;
+      console.log(member)
 
       if(response.data.success){
         try {
-          var result = await axios.delete(`http://localhost:4000/members/${memberId}`, { withCredentials: true });
+          var result = await axios.delete(`http://localhost:4000/members/${member._id}`, { withCredentials: true });
 
           if(result.data.success){
             console.log("Profil silindi");
