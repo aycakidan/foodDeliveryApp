@@ -21,6 +21,12 @@ const AdminPage = () => {
     handleFoods();
   }, []);
 
+  const [ addingFood, setAddingFood ] = useState(false);
+  const handleFoodEdit = () => {
+    if(addingFood) setAddingFood(false)
+    else setAddingFood(true)
+  }
+
   const handleDeleteFood = async (categoryIndex, foodIndex) => {
     try {
       await fetch(`http://localhost:4000/foods/${categoryIndex}/${foodIndex}`, {
@@ -30,15 +36,33 @@ const AdminPage = () => {
       const updatedFoods = [...food];
       updatedFoods[categoryIndex].items.splice(foodIndex, 1);
       setFood(updatedFoods);
+      AdminPage()
     } catch (error) {
       console.error('Error deleting food:', error);
     }
   };  
 
+  const [label, setLabel] = useState('');
+
+  const handleLabelChange = (event) => {
+    setLabel(event.target.value);
+  };
+
+  const [name , setName] = useState("")
+  const [price , setPrice] = useState("")
+
+  const handleTextChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleFloatChange = (event) => {
+    setPrice(parseFloat(event.target.value));
+  };
+
   const newFood = {
-    label: "Main Courses",
-    name: 'Pizza',
-    price: 10.99
+    label: label,
+    name: name,
+    price: price
   };
 
   const handleAddFood = async () => {
@@ -50,6 +74,10 @@ const AdminPage = () => {
       console.error(error); // Handle any errors
     });
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  };
 
   return (
     <>
@@ -75,7 +103,30 @@ const AdminPage = () => {
         </div>
 
         <div>
-        <button color="success" onClick={handleAddFood}>+</button>
+          
+          {addingFood === true ? (
+            <><form onSubmit={handleSubmit}>
+              <select id="dropdown" value={label} onChange={handleLabelChange}>
+                <option value="">-- Select --</option>
+                <option value="Main Courses">Main Courses</option>
+                <option value="Soups">Soups</option>
+                <option value="Deserts">Deserts</option>
+                <option value="Drinks">Drinks</option>
+              </select>
+              <div>
+                <label>Name</label>
+                <input type="text" value={name} onChange={handleTextChange} />
+              </div>
+              <div>
+                <label>Price</label>
+                <input type="number" step="0.01" value={price} onChange={handleFloatChange} />
+              </div>
+              <button color="success" onClick={handleAddFood}>Add</button>
+            </form><button onClick={handleFoodEdit}>Exit</button></>
+          ) : (
+            <button onClick={handleFoodEdit}>Add Product</button>
+          )}
+          
         </div>
 
         {
