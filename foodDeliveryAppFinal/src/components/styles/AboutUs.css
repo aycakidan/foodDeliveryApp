@@ -1,0 +1,31 @@
+h2 {
+    font-family: 'Anton', sans-serif;
+    font-size:10rem;
+    font-weight: bold;
+    background-image:url('rest.jpeg');
+    
+    background-position:center;
+    color:transparent;
+    background-attachment: fixed;
+  }
+  
+
+  p {
+    color: 
+rgb(7, 0, 0);
+    background-color: 
+rgb(244, 236, 240);
+}
+
+
+
+.AboutUs-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
